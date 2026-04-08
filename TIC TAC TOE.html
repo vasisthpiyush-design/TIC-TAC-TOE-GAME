@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Tic Tac Toe</h1>
+
+<div class="board">
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+</div>
+
+<h2 id="status">Player X's Turn</h2>
+<button onclick="resetGame()">Restart</button>
+
+<script>
+    let cells = document.querySelectorAll(".cell");
+    let statusText = document.getElementById("status");
+
+    let currentPlayer = "X";
+    let gameActive = true;
+
+    let winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+    ];
+
+    cells.forEach((cell, index) => {
+        cell.addEventListener("click", function() {
+            if (cell.innerText !== "" || !gameActive) return;
+
+            cell.innerText = currentPlayer;
+
+            if (checkWinner()) {
+                statusText.innerText = "Player " + currentPlayer + " Wins!";
+                gameActive = false;
+                return;
+            }
+
+            if ([...cells].every(c => c.innerText !== "")) {
+                statusText.innerText = "Draw!";
+                gameActive = false;
+                return;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            statusText.innerText = "Player " + currentPlayer + "'s Turn";
+        });
+    });
+
+    function checkWinner() {
+        return winPatterns.some(pattern => {
+            return pattern.every(index => {
+                return cells[index].innerText === currentPlayer;
+            });
+        });
+    }
+
+    function resetGame() {
+        cells.forEach(cell => cell.innerText = "");
+        currentPlayer = "X";
+        gameActive = true;
+        statusText.innerText = "Player X's Turn";
+    }
+</script>
+
+</body>
+</html>
